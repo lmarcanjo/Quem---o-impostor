@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Inter", "Helvetica Neue", Arial, sans-serif;
+  
+  --color-primary-500: #6366F1;
+  --color-dark-bg: #0F172A;
+  --color-dark-surface: #1E293B;
+  --color-text-p: #F8FAFC;
+  --color-text-s: #94A3B8;
+  --color-danger: #EF4444;
+}
+
+body {
+  background-color: var(--color-dark-bg);
+  color: var(--color-text-p);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  overflow-x: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  height: 100%;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.4); }
+  50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.8); }
+}
+
+.glow-btn {
+  animation: pulse-glow 2s infinite;
+}

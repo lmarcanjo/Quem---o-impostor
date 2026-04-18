@@ -1,0 +1,6 @@
+{
+  "name": "Quem é o Impostor?",
+  "description": "Um jogo social offline onde você precisa descobrir quem é o impostor do grupo usando palavras secretas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
