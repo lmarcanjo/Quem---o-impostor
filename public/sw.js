@@ -1,7 +1,7 @@
 const CACHE_NAME = 'impostor-cache-v1';
 const urlsToCache = [
-  '/',
-  '/index.html'
+  './',
+  './index.html'
 ];
 
 self.addEventListener('install', event => {
