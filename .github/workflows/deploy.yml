@@ -1,3 +1,5 @@
+# This workflow will build and deploy your Vite React app to GitHub Pages
+
 name: Deploy to GitHub Pages
 
 on:
@@ -6,25 +8,28 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: |
+          npm ci
 
       - name: Build
         run: |
-          # Your build commands here
+          npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-
-      - name: Invalidate CloudFront cache
-        if: ${{ github.event_name == 'push' }}
-        uses: jakejarvis/cloudfront-invalidate@v1
-        with:
-          distribution: YOUR_CLOUDFRONT_DISTRIBUTION_ID
-          paths: '/*'
+          publish_dir: ./dist
