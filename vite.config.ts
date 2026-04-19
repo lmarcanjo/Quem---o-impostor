@@ -7,7 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    base: './', // Ensures relative paths for assets on GitHub Pages
+    base: '/Quem---o-impostor/', // Ensures accurate path resolution on GitHub Pages repository
     plugins: [
       react(), 
       tailwindcss(),

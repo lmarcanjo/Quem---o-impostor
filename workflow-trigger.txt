@@ -1,3 +1,0 @@
-# Triggering GitHub Actions workflow
-
-This is a trivial commit to trigger the workflow.
