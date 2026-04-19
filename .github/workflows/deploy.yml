@@ -5,35 +5,41 @@ on:
     branches:
       - main
 
+permissions:
+  pages: write
+
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v2
         with:
           node-version: '20'
 
       - name: Clean npm cache
         run: npm cache clean --force
 
-      - name: Remove old artifacts
+      - name: Remove node_modules and package-lock.json
         run: |
           rm -rf node_modules
           rm -f package-lock.json
 
-      - name: Install dependencies fresh
+      - name: Install dependencies
         run: npm install
 
       - name: Build project
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload dist artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
           publish_dir: ./dist
