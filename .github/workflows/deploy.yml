@@ -2,8 +2,9 @@ name: Deploy para GitHub Pages
 
 on:
   push:
-    branches: ["main"] # Modifique para "master" se a sua branch principal tiver esse nome
+    branches: ["main"]
 
+# 🔴 ISSO AQUI RESOLVE O ERRO DE SEGURANÇA
 permissions:
   contents: read
   pages: write
@@ -20,22 +21,30 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do código
+      - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Instalar Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
           
-      - name: Instalar dependências
-        run: npm install
+      - name: Instalar Dependências
+        run: npm ci
         
-      - name: Gerar Build do Vite
+      - name: Build do Projeto
         run: npm run build
         
       - name: Configurar Pages
         uses: actions/configure-pages@v4
         
-   
+      # 🔴 ISSO AQUI RESOLVE O ERRO "publish_dir"
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+          
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
