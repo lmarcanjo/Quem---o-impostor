@@ -50,6 +50,12 @@ export default function App() {
   
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [votes, setVotes] = useState<Record<string, string>>({});
+  const [globalError, setGlobalError] = useState('');
+
+  const showError = (msg: string) => {
+    setGlobalError(msg);
+    setTimeout(() => setGlobalError(''), 3000);
+  };
 
   // Load state on mount
   useEffect(() => {
@@ -67,9 +73,9 @@ export default function App() {
   }, [players, usedWords, scores]);
 
   const startGame = () => {
-    if (selectedCategories.length === 0) return alert('Selecione pelo menos uma categoria!');
-    if (players.length < 3) return alert('É necessário pelo menos 3 jogadores!');
-    if (impostorCount >= players.length) return alert('O número de impostores deve ser menor que o de jogadores!');
+    if (selectedCategories.length === 0) return showError('Selecione pelo menos uma categoria!');
+    if (players.length < 3) return showError('É necessário pelo menos 3 jogadores!');
+    if (impostorCount >= players.length) return showError('O número de impostores deve ser menor que o de jogadores!');
 
     const randCat = selectedCategories[Math.floor(Math.random() * selectedCategories.length)];
     const wordsInCategory = CATEGORIES[randCat];
@@ -134,19 +140,15 @@ export default function App() {
   };
 
   const handleClearHistory = () => {
-    if (window.confirm('Tem certeza que deseja apagar o histórico de palavras sorteadas?')) {
-      resetUsedWords();
-      setUsedWords({});
-      alert('Histórico resetado!');
-    }
+    resetUsedWords();
+    setUsedWords({});
+    showError('✅ Histórico de palavras resetado!');
   };
 
   const handleClearScores = () => {
-    if (window.confirm('Zerar a pontuação de todos os jogadores?')) {
-      resetScores();
-      setScores({});
-      alert('Placar zerado!');
-    }
+    resetScores();
+    setScores({});
+    showError('✅ Placar zerado com sucesso!');
   };
 
   const recordVote = (votedPlayer: string) => {
@@ -226,6 +228,15 @@ export default function App() {
           </button>
         )}
       </header>
+      
+      <AnimatePresence>
+        {globalError && (
+          <motion.div initial={{opacity:0, y:-20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="absolute top-4 left-6 right-6 z-[100] bg-red-500 text-white p-4 rounded-2xl shadow-2xl font-bold flex items-center justify-between">
+            <span>{globalError}</span>
+            <button onClick={() => setGlobalError('')} className="p-1 min-w-[24px]"><X className="w-5 h-5"/></button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {showSettings && (
         <div className="absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col p-6 items-center justify-center">
@@ -257,7 +268,7 @@ export default function App() {
               scores={scores}
               onNext={() => {
                 if(players.length >= 3) setStep('config');
-                else alert('Adicione pelo menos 3 jogadores.');
+                else showError('Adicione pelo menos 3 jogadores.');
               }} 
             />
           )}
@@ -698,6 +709,7 @@ function VotingPassScreen({ currentPlayer, onNext }: any) {
 }
 
 function VotingScreen({ currentPlayer, allPlayers, onVote }: any) {
+  const [confirmPlayer, setConfirmPlayer] = useState<string | null>(null);
   const others = allPlayers.filter((p: string) => p !== currentPlayer);
 
   return (
@@ -711,9 +723,7 @@ function VotingScreen({ currentPlayer, allPlayers, onVote }: any) {
         {others.map((p: string) => (
           <button 
             key={p}
-            onClick={() => {
-              if(window.confirm(`Confirmar voto em ${p}?`)) onVote(p);
-            }}
+            onClick={() => setConfirmPlayer(p)}
             className="w-full bg-[#1E293B] border border-[#334155] p-5 rounded-2xl text-left flex justify-between items-center active:bg-[#6366F1]/20 active:border-[#6366F1] transition-colors group"
           >
             <span className="font-bold text-xl uppercase">{p}</span>
@@ -721,6 +731,32 @@ function VotingScreen({ currentPlayer, allPlayers, onVote }: any) {
           </button>
         ))}
       </div>
+
+      <AnimatePresence>
+        {confirmPlayer && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col p-6 items-center justify-center">
+            <div className="w-full max-w-sm bg-[#1E293B] p-6 rounded-3xl border border-[#334155] text-center shadow-2xl">
+              <h3 className="text-xl font-bold mb-2 text-[#F8FAFC] uppercase tracking-widest text-[#6366F1]">Confirmar</h3>
+              <p className="text-[#94A3B8] mb-8 text-lg">Tem certeza que deseja votar no(a) <b>{confirmPlayer}</b>?</p>
+              
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setConfirmPlayer(null)} 
+                  className="flex-1 py-4 rounded-2xl font-bold bg-[#0F172A] border border-[#334155] text-[#94A3B8] active:bg-[#F8FAFC]/5 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  onClick={() => onVote(confirmPlayer)} 
+                  className="flex-1 py-4 rounded-2xl font-bold bg-[#EF4444] text-[#F8FAFC] shadow-[0_4px_20px_rgba(239,68,68,0.4)] active:scale-95 transition-transform"
+                >
+                  Confirmar Voto
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
