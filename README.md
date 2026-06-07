@@ -118,9 +118,9 @@ npm run build
 
 ## 🧑‍💻 Autor
 
-Desenvolvido por **[Seu Nome Aqui]**.  
+Desenvolvido por **Luã Martins Arcanjo**.  
 *Conecte-se comigo para bater um papo sobre front-end moderno, boas práticas de engenharia de software ou desenvolvimento móvel!*
 
 * 📬 **E-mail:** [lmarcanjo16@gmail.com](mailto:lmarcanjo16@gmail.com)
-* 💼 **LinkedIn:** *(Adicione aqui o seu link!)*
-* 🌐 **Portfolio de Projetos:** *(Adicione aqui o seu link!)*
+* 💼 **LinkedIn:** https://www.linkedin.com/in/luã-martins-arcanjo-b34500124
+* 🌐 **Portfolio de Projetos:** *https://github.com/lmarcanjo/*
